@@ -28,8 +28,7 @@ def return_veget_params(config_directory):
     if os.path.exists(config_path_file_path):
         with open(config_path_file_path, 'r') as cfgpath:
             path_config_dict = yaml.safe_load(cfgpath)
-            print('xyx', cfgpath)
-            print(path_config_dict)
+            print('The config path: \n', cfgpath)
     else:
         print('the path does not exist, check the path you gave VegET()')
         sys.exit(1)

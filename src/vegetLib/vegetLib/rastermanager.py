@@ -63,22 +63,31 @@ class RasterManager:
         self.optimize = False
         self.config_dict = config_dict
 
-        tile = self.config_dict['tile']
+        try:
+            tile = self.config_dict['tile']
+            self.log.info('tile name is - {}'.format(tile))
+            self.temp_folder = './' + tile
+            self.log.info('temp folder is'.format(self.temp_folder))
+        except:
+            tile=''
 
-        self.log.info('tile name is - {}'.format(tile))
-        
-        if 'tile' in tile:
-            self.log.info("using scalable tile names {}".format(tile))
 
-            #bucket_name = self.config_dict['out_root'].split('/')[0]
-            #today = date.today()
-            #print("Current date =", today)
-            #date_str=today.strftime("%m_%d_%Y")
-            #self.config_dict['out_root'] = bucket_name + '/out/DelawareRiverBasin/Run' + date_str + '/' + tile
+        try:
+            if 'tile' in tile:
+                self.log.info("using scalable tile names {}".format(tile))
 
-            if self.config_dict['optimize']:
-                self.optimize = True
-                self.opti=OptiMeister(config_dict,shp)
+                #bucket_name = self.config_dict['out_root'].split('/')[0]
+                #today = date.today()
+                #print("Current date =", today)
+                #date_str=today.strftime("%m_%d_%Y")
+                #self.config_dict['out_root'] = bucket_name + '/out/DelawareRiverBasin/Run' + date_str + '/' + tile
+
+                if self.config_dict['optimize']:
+                    self.optimize = True
+                    self.opti=OptiMeister(config_dict, shp)
+
+        except:
+            pass
 
 
         # self.geoproperties_file = config_dict.geoproperties_file
@@ -86,8 +95,7 @@ class RasterManager:
         # self.temp_folder = os.path.join(config_dict.out_root, config_dict.temp_folder)
 
         # self.temp_folder = config_dict['temp_folder']
-        self.temp_folder = './' + tile
-        self.log.info('temp folder is'.format(self.temp_folder))
+
 
         if not os.path.exists(self.temp_folder):
             os.makedirs(self.temp_folder)
@@ -178,8 +186,11 @@ class RasterManager:
         while(cnt>0):
             try:
                 with rasterio.open(warpfile) as src:
-                    if src.crs == None:
-                        src.crs = CRS.from_epsg(4326)
+                    print(src)
+                    print('crs', src.crs)
+                    # TODO - this check may cause more problems than it solves GELP (commented out)
+                    # if src.crs == None:
+                    #     src.crs = CRS.from_epsg(4326)
                     # create the virtual raster based on the standard rasterio attributes from the sample tiff and shapefile feature.
                     with WarpedVRT(src, resampling=rs,
                            crs=self.crs,

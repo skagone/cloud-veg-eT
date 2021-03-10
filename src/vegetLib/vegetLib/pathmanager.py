@@ -77,9 +77,6 @@ class PathManager:
             else:
                 pass
 
-
-
-
     def get_dynamic_data(self, today, settings): # DOY=None, year_doy=None
         """
         This gets dynamic data, such as NDVI, precipitation, temperature, etc..
@@ -239,7 +236,6 @@ class PathManager:
 
         fpath = os.path.join(final_path, settings[name_key].format(dynamic_key))
         return fpath, scaling_factor
-
 
     def get_static_data(self, settings):
         """
